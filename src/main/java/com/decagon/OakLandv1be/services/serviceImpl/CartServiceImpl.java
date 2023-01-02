@@ -4,9 +4,8 @@ package com.decagon.OakLandv1be.services.serviceImpl;
 import com.decagon.OakLandv1be.entities.Cart;
 import com.decagon.OakLandv1be.entities.Item;
 import com.decagon.OakLandv1be.entities.Person;
-import com.decagon.OakLandv1be.entities.Product;
 import com.decagon.OakLandv1be.exceptions.ResourceNotFoundException;
-import com.decagon.OakLandv1be.exceptions.UnauthorizedUserException;
+import com.decagon.OakLandv1be.exceptions.UnauthorizedException;
 import com.decagon.OakLandv1be.repositries.CartRepository;
 import com.decagon.OakLandv1be.repositries.ItemRepository;
 import com.decagon.OakLandv1be.repositries.PersonRepository;
@@ -17,7 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Set;
 
 
@@ -58,6 +56,6 @@ public class CartServiceImpl implements CartService {
                 throw new ResourceNotFoundException("Item does not exist");
             }
         }
-        throw new UnauthorizedUserException("Login to carry out this operation");
+        throw new UnauthorizedException("Login to carry out this operation");
     }
 }
