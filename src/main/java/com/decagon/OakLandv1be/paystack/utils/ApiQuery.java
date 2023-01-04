@@ -7,7 +7,7 @@ public class ApiQuery {
     private HashMap<String, Object> queryMap;
 
     public ApiQuery(){
-        this.queryMap = new HashMap<String, Object>();
+        this.queryMap = new HashMap<>();
     }
 
     public void putParams(String key, Object value){

@@ -15,7 +15,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.json.JSONObject;
 
 import javax.net.ssl.SSLContext;
-import java.io.FileNotFoundException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
@@ -27,22 +26,11 @@ import static org.apache.http.nio.conn.ssl.SSLIOSessionStrategy.BROWSER_COMPATIB
 @Setter
 public class ApiConnection {
 
-
-
     private String url;
-    private String apiKey;
+    private String API_KEY = "sk_test_26cc81b3fc91a4e6cd2002ba7f2beeec550cb07f";
 
     public ApiConnection(String url){
         this.url = url;
-        Keys keys = new Keys();
-
-        try{
-            keys.initKeys();
-        }catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-
-        this.apiKey = keys.KEY_IN_USE;
         this.enforceTlsV1point2();
     }
 
@@ -72,7 +60,7 @@ public class ApiConnection {
         try{
             queryForResponse = Unirest.post(url)
                     .header("Accept", "application/json")
-                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Authorization", "Bearer " + API_KEY)
                     .fields(query.getParams())
                     .asJson();
 
