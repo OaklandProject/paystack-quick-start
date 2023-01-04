@@ -1,7 +1,7 @@
 package com.decagon.OakLandv1be.utils;
 
-import com.decagon.OakLandv1be.entities.Person;
-import com.decagon.OakLandv1be.entities.Product;
+import com.decagon.OakLandv1be.entities.*;
+import com.decagon.OakLandv1be.enums.BaseCurrency;
 import com.decagon.OakLandv1be.enums.Gender;
 import com.decagon.OakLandv1be.enums.Role;
 import com.decagon.OakLandv1be.repositries.CustomerRepository;
@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class FakeData {
     private final PasswordEncoder passwordEncoder;
 
+
     @Bean
     public CommandLineRunner commandLineRunner(PersonRepository personRepository, ProductRepository productRepository) {
         return argument -> {
@@ -30,6 +31,7 @@ public class FakeData {
                         .date_of_birth("13-08-1990")
                         .phone("9859595959")
                         .verificationStatus(true)
+                        .isActive(true)
                         .password(passwordEncoder.encode("password123"))
                         .address("No Address")
                         .role(Role.ADMIN)
@@ -52,4 +54,3 @@ public class FakeData {
 
         };
     }
-}

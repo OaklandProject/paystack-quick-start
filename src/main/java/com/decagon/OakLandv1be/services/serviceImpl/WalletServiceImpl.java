@@ -5,7 +5,7 @@ import com.decagon.OakLandv1be.entities.Person;
 import com.decagon.OakLandv1be.entities.Transaction;
 import com.decagon.OakLandv1be.entities.Wallet;
 import com.decagon.OakLandv1be.exceptions.ResourceNotFoundException;
-import com.decagon.OakLandv1be.exceptions.UnauthorizedUserException;
+import com.decagon.OakLandv1be.exceptions.UnauthorizedException;
 import com.decagon.OakLandv1be.repositries.PersonRepository;
 import com.decagon.OakLandv1be.repositries.TransactionRepository;
 import com.decagon.OakLandv1be.repositries.WalletRepository;
@@ -63,7 +63,7 @@ public class WalletServiceImpl implements WalletService {
             }
             return new ResponseEntity<>(responseManager.success("Wallet funded successfully"), HttpStatus.OK);
         }
-        throw new UnauthorizedUserException("Login to carry out this operation");
+        throw new UnauthorizedException("Login to carry out this operation");
     }
 
 }

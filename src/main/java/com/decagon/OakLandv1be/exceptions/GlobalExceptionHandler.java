@@ -63,9 +63,8 @@ public class GlobalExceptionHandler {
 
     }
 
-
-    @ExceptionHandler({UnauthorizedUserException.class})
-    public ResponseEntity<ErrorResponse> handleUnauthorizedUserException(UnauthorizedUserException ex){
+    @ExceptionHandler({UnauthorizedException.class})
+    public ResponseEntity<ErrorResponse> handleUnauthorizedUserException(UnauthorizedException ex){
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(ex.getMessage())
                 .debugMessage("User does not have the right access")
