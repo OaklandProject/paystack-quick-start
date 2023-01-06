@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
+
 @Configuration
 @RequiredArgsConstructor
 public class FakeData {
@@ -23,6 +25,13 @@ public class FakeData {
     public CommandLineRunner commandLineRunner(PersonRepository personRepository, ProductRepository productRepository) {
         return argument -> {
             if (!personRepository.existsByEmail("benson@gmail.com")) {
+                Customer customer = Customer.builder()
+                        .cart(new Cart())
+                        .wallet(Wallet.builder()
+                                .accountBalance(new BigDecimal(0))
+                                .baseCurrency(BaseCurrency.POUNDS)
+                                .build())
+                        .build();
                 Person person = Person.builder()
                         .firstName("Benson")
                         .lastName("Malik")
@@ -34,9 +43,13 @@ public class FakeData {
                         .isActive(true)
                         .password(passwordEncoder.encode("password123"))
                         .address("No Address")
-                        .role(Role.ADMIN)
+                        .role(Role.CUSTOMER)
+                        .customer(customer)
                         .build();
                 personRepository.save(person);
+
+
+
             }
 
             if (productRepository.existsById(1L)) {
@@ -51,6 +64,7 @@ public class FakeData {
                 product.setId(1L);
                 productRepository.save(product);
             }
+
 
         };
     }

@@ -6,9 +6,9 @@ import com.decagon.OakLandv1be.services.WalletService;
 import com.decagon.OakLandv1be.utils.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,11 +16,5 @@ import org.springframework.web.bind.annotation.RestController;
 public class WalletController {
 
     private final WalletService walletService;
-
-    @PostMapping("/fund")
-    public ResponseEntity<ApiResponse<Object>> fundWallet(FundWalletRequest request){
-
-        return walletService.fundWallet(request);
-    }
 
 }

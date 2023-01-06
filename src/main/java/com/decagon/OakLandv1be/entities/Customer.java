@@ -13,7 +13,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@ToString
 @Table(name = "customer_tbl")
 public class Customer extends BaseEntity{
 
