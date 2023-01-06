@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -16,7 +17,7 @@ import java.util.Set;
 @Table(name = "wallet_tbl")
 public class Wallet extends BaseEntity{
 
-    private Double accountBalance;
+    private BigDecimal accountBalance;
 
     @Enumerated(EnumType.STRING)
     private BaseCurrency baseCurrency;

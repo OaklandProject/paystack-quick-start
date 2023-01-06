@@ -11,6 +11,8 @@ public interface TransactionInitService {
 
     TransactionInitResponseDto verifyPayment(String reference);
 
+    String finalizeTransaction(String reference);
+
 //    JSONObject verifyTransaction(String reference);
 
 //    JSONObject verifyTransaction(String reference);

@@ -1,10 +1,14 @@
 package com.decagon.OakLandv1be.paystack.service;
 
+import com.decagon.OakLandv1be.entities.PaystackTransaction;
+import com.decagon.OakLandv1be.exceptions.ResourceNotFoundException;
 import com.decagon.OakLandv1be.paystack.utils.ApiConnection;
 import com.decagon.OakLandv1be.paystack.utils.ApiQuery;
 import com.decagon.OakLandv1be.paystack.dto.Amount;
 import com.decagon.OakLandv1be.paystack.dto.TransactionInitRequestDto;
 import com.decagon.OakLandv1be.paystack.dto.TransactionInitResponseDto;
+import com.decagon.OakLandv1be.repositries.PaystackTransactionRepository;
+import com.decagon.OakLandv1be.services.WalletService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
@@ -15,17 +19,24 @@ import org.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.util.UUID;
+
 
 @Service
 @RequiredArgsConstructor
 public class TransactionInitServiceImpl implements TransactionInitService {
 
+    private final PaystackTransactionRepository transactionRepository;
     private ApiConnection apiConnection;
 
     private final String key = "sk_test_26cc81b3fc91a4e6cd2002ba7f2beeec550cb07f";
+
+    private final WalletService walletService;
+
+
 
     @Override
     public JSONObject initTransaction(Amount amount) {
@@ -38,6 +49,9 @@ public class TransactionInitServiceImpl implements TransactionInitService {
         TransactionInitRequestDto request = new TransactionInitRequestDto();
         request.setAmount(amountInKobo);
         request.setEmail(email);
+        request.setReference(UUID.randomUUID().toString());
+        request.setCallback_url("http://localhost:8080/api/v1/finalizeTrans/"+request.getReference());
+
 
         apiConnection = new ApiConnection("https://api.paystack.co/transaction/initialize");
 
@@ -46,6 +60,12 @@ public class TransactionInitServiceImpl implements TransactionInitService {
         query.putParams("email", request.getEmail());
         query.putParams("reference", request.getReference());
         query.putParams("callback_url", request.getCallback_url());
+
+        PaystackTransaction transaction = PaystackTransaction.builder()
+                .reference(request.getReference())
+                .email(email)
+                .success(true).build();
+        transactionRepository.save(transaction);
 
         return apiConnection.connectAndQuery(query);
 
@@ -79,7 +99,7 @@ public class TransactionInitServiceImpl implements TransactionInitService {
             responseDto = mapper.readValue(result.toString(), TransactionInitResponseDto.class);
 
             if (responseDto == null || responseDto.getStatus().equals("false")) {
-                throw new Exception("An error occurred while  verifying payment");
+                throw new Exception("An error occurred while verifying payment");
             } else if (responseDto.getData().getStatus().equals("success")) {
                 //PAYMENT IS SUCCESSFUL, APPLY VALUE TO THE TRANSACTION
                 responseDto.setStatus(true);
@@ -92,6 +112,26 @@ public class TransactionInitServiceImpl implements TransactionInitService {
         return responseDto;
 
     }
+
+
+    @Override
+    public String finalizeTransaction(String reference){
+        TransactionInitResponseDto trans = verifyPayment(reference);
+        if(trans.getStatus()){
+            PaystackTransaction transDetails=transactionRepository.findByReference(reference).orElseThrow(
+                    ()->     new ResourceNotFoundException("No such transaction in our record")
+            );
+
+            walletService.fundWallet(transDetails.getEmail(), trans.getData()
+                    .getAmount()
+                    .divide(new BigDecimal(100)));
+            transDetails.setSuccess(true);
+            transactionRepository.save(transDetails);
+            return "Transaction Completed";
+        }
+        return "Transaction not successful";
+    }
+
 
 
 }

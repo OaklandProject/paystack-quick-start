@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/v1")
 public class PaystackPaymentController {
 
     private final TransactionInitService service;
@@ -28,6 +29,12 @@ public class PaystackPaymentController {
 
         TransactionInitResponseDto response = service.verifyPayment(reference);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/finalizeTrans/{reference}")
+    public ResponseEntity<String> finalizePayment(@PathVariable String reference){
+        return new ResponseEntity<>(service.finalizeTransaction(reference), HttpStatus.OK);
     }
 
 }

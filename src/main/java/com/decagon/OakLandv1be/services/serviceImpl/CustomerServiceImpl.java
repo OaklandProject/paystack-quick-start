@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 import static com.decagon.OakLandv1be.enums.TokenStatus.ACTIVE;
@@ -68,7 +69,7 @@ public class CustomerServiceImpl implements CustomerService {
         person.setPassword(passwordEncoder.encode(signupRequestDto.getPassword()));
             Wallet wallet = Wallet.builder()
                     .baseCurrency(BaseCurrency.NAIRA)
-                    .accountBalance(0.00)
+                    .accountBalance(new BigDecimal(0.0))
                     .customer(customer)
                     .build();
 

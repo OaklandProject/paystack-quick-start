@@ -9,6 +9,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableConfigurationProperties(RSAKeyProperties.class)
 @EnableSwagger2
+
 public class OakLandV1BeApplication {
 
 	public static void main(String[] args) {
